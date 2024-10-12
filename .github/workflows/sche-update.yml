@@ -1,0 +1,27 @@
+name: Sche Update
+
+on:
+  schedule:
+    - cron:  '0/5 * * * *'
+
+jobs:
+  update-swagger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: |
+          git pull
+
+          echo `date +%c` >> updated_by_sche.txt
+          tail -1 updated_by_sche.txt 
+
+          git config --global user.name "Schedule Updater"
+          git config --global user.email "sche_bot@local.host"
+
+          git add updated_by_sche.txt 
+          git commit -m "Schedule Update"
+          git push origin
+  
+      - name: Show Git Config
+        run: git config --list
